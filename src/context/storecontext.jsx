@@ -1,0 +1,220 @@
+import React, { createContext, useState, useEffect, useMemo } from 'react';
+import { products } from '../constants'
+import axios from 'axios';
+import { toast } from 'react-hot-toast';
+const StoreContext = createContext();
+
+const StoreProvider = ({ children }) => {
+  const url = "http://localhost:5010"
+  const [food_list, setFoodList] = useState([]);
+  const [cartItems, setCartItems] = useState({});
+  const [token, setToken] = useState("");
+  const [isVisible, setIsVisible] = useState(true);
+  const [showLogin, setShowLogin] = useState(false);
+  const [isFirstTimeUser, setIsFirstTimeUser] = useState(true);
+  const currency = "₹";
+  const deliveryCharge = 5;
+
+  // Calculate store items count using useMemo
+  const storeItemsCount = useMemo(() => 
+    Object.values(cartItems).reduce((sum, quantity) => sum + quantity, 0),
+    [cartItems]
+  );
+
+  const addToCart = async (productId) => {
+    const storedToken = localStorage.getItem('token');
+    if (!storedToken) {
+      throw new Error('Please login to add items');
+    }
+    try {
+      const response = await axios.post(
+        `${url}/api/cart/add`,
+        { itemId: productId },
+        {
+          headers: {
+            'Authorization': `Bearer ${storedToken}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+  
+      if (response.data.success) {
+        // Update local cart state
+        await loadCartData();
+        return response.data;
+      } else {
+        throw new Error(response.data.message || 'Failed to add item');
+      }
+    } catch (error) {
+      console.error('Add to cart error:', error);
+      throw error;
+    }
+  };
+
+  const removeFromCart = async (itemId) => {
+    const storedToken = localStorage.getItem('token');
+    if (!storedToken) {
+      throw new Error('Please login to remove items');
+    }
+  
+    try {
+      // First update local state optimistically
+      setCartItems((prev) => {
+        const updatedItems = { ...prev };
+        if (updatedItems[itemId] <= 1) {
+          delete updatedItems[itemId];
+        } else {
+          updatedItems[itemId] = updatedItems[itemId] - 1;
+        }
+        return updatedItems;
+      });
+  
+      // Then make API call
+      const response = await axios.post(
+        `${url}/api/cart/remove`, 
+        { itemId }, 
+        { 
+          headers: { 
+            'Authorization': `Bearer ${storedToken}`,
+            'Content-Type': 'application/json'
+          } 
+        }
+      );
+  
+      if (!response.data.success) {
+        throw new Error(response.data.message || 'Failed to remove item');
+      }
+  
+      // Refresh cart data to ensure sync with server
+      await loadCartData();
+    } catch (error) {
+      console.error('Error removing from cart:', error);
+      // Revert local state on error
+      await loadCartData();
+      throw error;
+    }
+  };
+
+  const getTotalCartAmount = () => {
+    try {
+      return Object.entries(cartItems).reduce((total, [productId, quantity]) => {
+        const product = products.find(p => p.id === parseInt(productId));
+        if (!product) {
+          console.warn(`Product not found for ID: ${productId}`);
+          return total;
+        }
+        return total + (product.price * quantity);
+      }, 0);
+    } catch (error) {
+      console.error('Error calculating total:', error);
+      return 0;
+    }
+  };
+
+  const fetchFoodList = async () => {
+    try {
+      const response = await axios.get(`${url}/api/food/list`);
+      setFoodList(response.data.data);
+    } catch (error) {
+      console.error('Error fetching food list:', error);
+    }
+  };
+
+
+  const loadCartData = async () => {
+    const storedToken = localStorage.getItem("token");
+    if (!storedToken) return;
+  
+    try {
+      const response = await axios.post(
+        `${url}/api/cart/get`,
+        {},
+        { 
+          headers: { 
+            'Authorization': `Bearer ${storedToken}`,
+            'Content-Type': 'application/json'
+          } 
+        }
+      );
+      setCartItems(response.data.cartData || {});
+    } catch (error) {
+      console.error('Error loading cart:', error);
+      if (error.response?.status === 401) {
+        // Token might be invalid or expired
+        localStorage.removeItem("token");
+        setToken("");
+      }
+    }
+  };
+
+// Handling of contact me form
+
+const submitContactForm = async (formData) => {
+  try {
+    console.log('Form data:', formData);
+    const response = await axios.post(
+      `${url}/api/contact/submit`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    if (response.data.success) {
+      toast.success(response.data.message);
+      return true;
+    } else {
+      throw new Error(response.data.message || 'Failed to submit form');
+    }
+  } catch (error) {
+    console.error('Contact submission error:', error);
+    toast.error(error.response?.data?.message || 'Failed to submit form');
+    return false;
+  }
+};
+
+  useEffect(() => {
+    const initializeApp = async () => {
+      await fetchFoodList();
+      const storedToken = localStorage.getItem("token");
+      if (storedToken) {
+        setToken(storedToken);
+        await loadCartData();
+      }
+    };
+    
+    initializeApp();
+  }, []);
+
+  const contextValue = {
+    url,
+    food_list,
+    cartItems,
+    storeItemsCount,
+    isVisible,
+    setIsVisible,
+    addToCart,
+    removeFromCart,
+    getTotalCartAmount,
+    token,
+    setToken,
+    loadCartData,
+    setCartItems,
+    currency,
+    deliveryCharge,
+    showLogin,
+    setShowLogin,
+    submitContactForm,
+  };
+
+  return (
+    <StoreContext.Provider value={contextValue}>
+      {children}
+    </StoreContext.Provider>
+  );
+};
+
+export { StoreContext, StoreProvider };
+

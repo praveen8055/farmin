@@ -1,0 +1,32 @@
+.navbar-profile {
+    position: relative;
+  }
+  
+  .navbar-profile-dropdown {
+    position: absolute;
+    top: 130%;  /* Changed from 100% to 130% to move it down */
+    right: 0;
+    min-width: 200px;
+    z-index: 50;
+    transition: all 0.2s ease;
+    margin-top: 5px; 
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .navbar-profile-dropdown li {
+    transition: all 0.2s ease;
+  }
+  
+  .navbar-profile-dropdown li:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }

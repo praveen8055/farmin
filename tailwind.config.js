@@ -10,9 +10,18 @@ export default {
           100: "#94928d",
           200: "#afafaf",
           300: "#42424570",
+         
         },
         zinc: "#101010",
+      
       },
+      backdropBlur: {
+        sm: '3px',
+      },
+      transitionProperty: {
+        'colors': 'background-color, border-color, color',
+      }
+
     },
   },
   plugins: [],
