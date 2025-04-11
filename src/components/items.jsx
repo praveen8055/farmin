@@ -8,7 +8,7 @@ const ItemComponent = forwardRef(({ product },ref) => {
     const buttonRef = useRef(null);
     const [showFullDescription, setShowFullDescription] = useState(false);
     const [reviews] = useState(Math.floor(Math.random() * 100));
-    const { addToCart, token,setShowLogin } = useContext(StoreContext);
+    const { addToCart, token,setShowLogin,fetchProductList,food_list } = useContext(StoreContext);
 
     const truncateDescription = (text, length = 150) => {
         return text.length > length ? text.substring(0, length) + '...' : text;
@@ -144,55 +144,3 @@ const ItemComponent = forwardRef(({ product },ref) => {
 
 export default ItemComponent;
 
-// import React, { useContext,useRef } from 'react';
-// import { StoreContext } from '../context/storecontext';
-// import gsap from 'gsap';
-// import { useGSAP } from '@gsap/react'
-// import { animateWithGsap } from '../utils/animations';
-
-// const ItemComponent = ({ product }) => {
-//     const buttonRef = useRef(null); 
-   
-//     useGSAP(()=>{ 
-        
-//         gsap.to(buttonRef.current, {
-//             // y: -5, // Move the button up by 20px
-//             scale:1.05,
-//             duration: 0.5, // Duration of the animation
-//             yoyo: true, // Reverse the animation after completion
-//             repeat: -1, // Repeat the animation infinitely
-//             ease: "power1.inOut", // Smooth easing
-//           });
-//         animateWithGsap(
-//             '#g_grow',
-//             {scale:1.1,
-//             ease:'power1.inOut',
-//             stagger: 0.1,
-//             duration: 1},{
-//                 scrub: 0.5,
-
-//             }
-           
-//           )
-         
-// },[ ])
-//     const { storeItemsCount, isVisible, handleAddToStore } = useContext(StoreContext);
-//   return (
-//     <div className=" card bg-zinc md:mr-5 rounded-xl shadow-sm shadow-neutral-300 s p-4 flex-1   relative sm:w-[70vw] w-[88vw] md:h-[55vh] sm:h-[40vh] h-[35vh] ">
-//        <div className='flex-col items-start'>
-//       <img id="g_grow"src={product.image} alt={product.name} className="w-full h-full object-cover rounded-t-lg " />
-//       <h2  className="text-xl font-bold mb-2 mt-4">{product.name}</h2>
-//       <p  className="text-lime-600">{product.quantity}</p>
-//       <p  className="text-gray-600">{product.discription}</p>
-//       <p  className="text-lg font-bold mt-2">{product.price}</p>
-//       </div>
-//       <div className='flex justify-center mt-3 w-full '>
-//       <button ref={buttonRef}   className=" btn  " onClick={handleAddToStore}>
-//         Add to Cart
-//       </button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default ItemComponent;

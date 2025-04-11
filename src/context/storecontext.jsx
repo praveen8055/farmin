@@ -111,12 +111,22 @@ const StoreProvider = ({ children }) => {
     }
   };
 
-  const fetchFoodList = async () => {
+  const fetchProductList = async () => {
     try {
-      const response = await axios.get(`${url}/api/food/list`);
-      setFoodList(response.data.data);
+      const response = await axios.get(`${url}/api/products/list`);
+      if (response.data.success) {
+        // Transform products data to include full image URLs
+        const productsWithUrls = response.data.data.map(product => ({
+          ...product,
+          image: `${url}/uploads/${product.image}`
+        }));
+        setFoodList(productsWithUrls); // Keep using foodList state for compatibility
+      } else {
+        throw new Error(response.data.message || 'Failed to fetch products');
+      }
     } catch (error) {
-      console.error('Error fetching food list:', error);
+      console.error('Error fetching products:', error);
+      toast.error('Failed to load products');
     }
   };
 
@@ -175,18 +185,52 @@ const submitContactForm = async (formData) => {
   }
 };
 
-  useEffect(() => {
-    const initializeApp = async () => {
-      await fetchFoodList();
-      const storedToken = localStorage.getItem("token");
-      if (storedToken) {
-        setToken(storedToken);
-        await loadCartData();
+const getCartItemsWithDetails = () => {
+  try {
+    return Object.entries(cartItems).map(([productId, quantity]) => {
+      const product = food_list.find(p => p._id === productId);
+
+      if (product) {
+        return {
+          productId,
+          productName: product.name,
+          quantity: parseInt(quantity) // Ensure quantity is an integer
+        };
       }
-    };
-    
-    initializeApp();
-  }, []);
+
+      const localProduct = products.find(p => p.id === parseInt(productId));
+      if (localProduct) {
+        return {
+          productId,
+          productName: localProduct.name,
+          quantity: parseInt(quantity)
+        };
+      }
+
+      return {
+        productId,
+        productName: "Unknown Product",
+        quantity: parseInt(quantity)
+      };
+    });
+  } catch (error) {
+    console.error('Error getting cart details:', error);
+    return [];
+  }
+};
+
+useEffect(() => {
+  const initializeApp = async () => {
+    await fetchProductList(); // Changed from fetchFoodList
+    const storedToken = localStorage.getItem("token");
+    if (storedToken) {
+      setToken(storedToken);
+      await loadCartData();
+    }
+  };
+  
+  initializeApp();
+}, []);
 
   const contextValue = {
     url,
@@ -207,6 +251,8 @@ const submitContactForm = async (formData) => {
     showLogin,
     setShowLogin,
     submitContactForm,
+    fetchProductList,
+    getCartItemsWithDetails // Ensure this is included
   };
 
   return (

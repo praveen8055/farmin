@@ -60,8 +60,9 @@ const OrderCard = React.memo(({ order, currency }) => {
             {order.items?.map((item, idx) => (
               <div key={`${order._id}-item-${idx}`} 
                    className="flex justify-between items-center py-2 border-b border-zinc-700">
-                <span className="flex-grow text-white font-medium">{item.productId}</span>
-                <span className="text-white text-sm">{item.d}</span>
+                <span className="flex-grow text-white font-medium">
+                  {item.productName || `Product #${item.productId.slice(-6)}`}
+                </span>
                 <span className="text-lime-400 font-medium ml-4">× {item.quantity}</span>
               </div>
             ))}

@@ -55,7 +55,7 @@ export const hightlightsSlides = [
 export const products=[
   {
     id:1,
-    name:"Chilli Powder",
+    name:"Chilli Powder 1kg",
     image:chilliimg,
     quantity:"1KG",
     description:"Authentic stone-ground spice from local farms. 100% natural, vibrant color & smoky heat for daily home cooking.",
@@ -66,7 +66,7 @@ export const products=[
   },
   {
     id:2,
-    name:"Chilli Powder",
+    name:"Chilli Powder 5kg",
     image:chilliimg2,
     quantity:"5KG",
     description:"Premium sun-dried chillies, handpicked for rich flavor. Ideal for family feasts—retains freshness for months",
@@ -75,7 +75,7 @@ export const products=[
   },
   {
     id:3,
-    name:"Chilli Powder",
+    name:"Chilli Powder 10kg",
     image:chilliimg3,
     quantity:"10KG",
     description:"High-intensity spice for chefs & restaurants. Authentic Telangana flavor with consistent, bold quality",

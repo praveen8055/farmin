@@ -9,7 +9,7 @@ import highlightSectmv from "/assets/videos/farminchillipowder.mp4";
 import highlightThirdmv from "/assets/videos/farminturmericup.mp4";
 import highlightFourthmv from "/assets/videos/farminmasala.mp4";
 import exploremv from "/assets/videos/explore.mp4";
-import framemv from "/assets/videos/frame.mp4";
+
 import chillimv from "/assets/videos/chilli.mp4";
 
 import apple from "/assets/images/apple.svg";
@@ -56,7 +56,7 @@ export const highlightSecondVideo = highlightSectmv;
 export const highlightThirdVideo = highlightThirdmv;
 export const highlightFourthVideo = highlightFourthmv;
 export const exploreVideo = exploremv;
-export const frameVideo = framemv;
+
 export const chilliVideo = chillimv;
 export const womenImg=womenimg;
 export const appleImg = apple;
