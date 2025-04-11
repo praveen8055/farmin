@@ -1,12 +1,10 @@
 import {
-  blackImg,
-  blueImg,
+ 
   highlightFirstVideo,
   highlightFourthVideo,
   highlightSecondVideo,
   highlightThirdVideo,
-  whiteImg,
-  yellowImg,
+ 
   chilliimg,
   chilliimg2,
   chilliimg3,
