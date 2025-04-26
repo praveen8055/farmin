@@ -5,7 +5,7 @@ import { toast } from 'react-hot-toast';
 const StoreContext = createContext();
 
 const StoreProvider = ({ children }) => {
-  const url = "http://localhost:5010"
+  const url = process.env.Base_Url
   const [food_list, setFoodList] = useState([]);
   const [cartItems, setCartItems] = useState({});
   const [token, setToken] = useState("");
