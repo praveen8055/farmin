@@ -4,7 +4,7 @@ import App from './App.jsx'
 import './index.css'
 import { StoreProvider } from './context/storecontext.jsx';
 //...
-import * as Sentry from "@sentry/react";
+
 import { BrowserRouter } from 'react-router-dom'
 
 // Sentry.init({

@@ -4,8 +4,12 @@ import axios from 'axios';
 import { toast } from 'react-hot-toast';
 const StoreContext = createContext();
 
+// Access the environment variable
+const apiUrl = import.meta.env.VITE_API_URL;
+
 const StoreProvider = ({ children }) => {
-  const url = "http://localhost:5010"
+  // Use the variable from import.meta.env
+  const url = apiUrl; 
   const [food_list, setFoodList] = useState([]);
   const [cartItems, setCartItems] = useState({});
   const [token, setToken] = useState("");
@@ -28,7 +32,7 @@ const StoreProvider = ({ children }) => {
     }
     try {
       const response = await axios.post(
-        `${url}/api/cart/add`,
+        `${url}/api/cart/add`, // url is now using the env variable
         { itemId: productId },
         {
           headers: {
@@ -71,7 +75,7 @@ const StoreProvider = ({ children }) => {
   
       // Then make API call
       const response = await axios.post(
-        `${url}/api/cart/remove`, 
+        `${url}/api/cart/remove`, // url is now using the env variable
         { itemId }, 
         { 
           headers: { 
@@ -113,12 +117,12 @@ const StoreProvider = ({ children }) => {
 
   const fetchProductList = async () => {
     try {
-      const response = await axios.get(`${url}/api/products/list`);
+      const response = await axios.get(`${url}/api/products/list`); // url is now using the env variable
       if (response.data.success) {
         // Transform products data to include full image URLs
         const productsWithUrls = response.data.data.map(product => ({
           ...product,
-          image: `${url}/uploads/${product.image}`
+          image: `${url}/uploads/${product.image}` // url is now using the env variable
         }));
         setFoodList(productsWithUrls); // Keep using foodList state for compatibility
       } else {
@@ -137,7 +141,7 @@ const StoreProvider = ({ children }) => {
   
     try {
       const response = await axios.post(
-        `${url}/api/cart/get`,
+        `${url}/api/cart/get`, // url is now using the env variable
         {},
         { 
           headers: { 
@@ -163,7 +167,7 @@ const submitContactForm = async (formData) => {
   try {
     console.log('Form data:', formData);
     const response = await axios.post(
-      `${url}/api/contact/submit`,
+      `${url}/api/contact/submit`, // url is now using the env variable
       formData,
       {
         headers: {
@@ -233,7 +237,7 @@ useEffect(() => {
 }, []);
 
   const contextValue = {
-    url,
+    url, // Pass the url (which now comes from env) to the context
     food_list,
     cartItems,
     storeItemsCount,
