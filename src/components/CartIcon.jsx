@@ -9,7 +9,7 @@ const CartIcon = () => {
     <div className="fixed bottom-4 right-4 w-16 h-100 shadow-sm shadow-white rounded-3xl z-50">
     <div className="flex flex-col items-center justify-center">
       <div className='mb-3 mt-3 rounded-lg '>
-        <a href="https://wa.me/+15084109422" className="cursor-pointer rounded-md relative mt-3 mb-3">
+        <a href="https://wa.me/+917893992280" className="cursor-pointer rounded-md relative mt-3 mb-3">
           <img src={whatsappImg} alt="whatsapp" width={40} height={40} className=" bg-transparent rounded-md transition-all hover:scale-125  duration-300" />
         </a>
       </div>
